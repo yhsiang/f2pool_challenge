@@ -57,9 +57,7 @@ func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
 		RootRootHandler: root.RootHandlerFunc(func(params root.RootParams) middleware.Responder {
 			return middleware.NotImplemented("operation root.Root has not yet been implemented")
 		}),
-		ToolsValidateIPHandler: tools.ValidateIPHandlerFunc(func(params tools.ValidateIPParams) middleware.Responder {
-			return middleware.NotImplemented("operation tools.ValidateIP has not yet been implemented")
-		}),
+		ToolsValidateIPHandler: tools.ValidateIPHandlerFunc(handlers.ValidateIP),
 	}
 }
 
