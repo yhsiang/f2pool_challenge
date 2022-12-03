@@ -52,9 +52,7 @@ func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
 
 		ToolsLookupDomainHandler: tools.LookupDomainHandlerFunc(handler.LookupDomain),
 		HistoryQueriesHistoryHandler: history.QueriesHistoryHandlerFunc(handler.QueriesHistory),
-		RootRootHandler: root.RootHandlerFunc(func(params root.RootParams) middleware.Responder {
-			return middleware.NotImplemented("operation root.Root has not yet been implemented")
-		}),
+		RootRootHandler: root.RootHandlerFunc(handlers.Root),
 		ToolsValidateIPHandler: tools.ValidateIPHandlerFunc(handlers.ValidateIP),
 	}
 }

@@ -21,7 +21,7 @@ type HandlerRootResponse struct {
 	Date int64 `json:"date,omitempty"`
 
 	// kubernetes
-	Kubernetes bool `json:"kubernetes,omitempty"`
+	Kubernetes *bool `json:"kubernetes,omitempty"`
 
 	// version
 	Version string `json:"version,omitempty"`
