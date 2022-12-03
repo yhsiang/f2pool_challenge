@@ -19,6 +19,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/yhsiang/f2pool-challenge/database"
+	"github.com/yhsiang/f2pool-challenge/restapi/handlers"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/history"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/root"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/tools"
@@ -26,6 +28,8 @@ import (
 
 // NewInterviewChallengeAPI creates a new InterviewChallenge instance
 func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
+	db:=database.NewDB()
+	handler:= handlers.NewQueryHandler(db)
 	return &InterviewChallengeAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
@@ -46,9 +50,7 @@ func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		ToolsLookupDomainHandler: tools.LookupDomainHandlerFunc(func(params tools.LookupDomainParams) middleware.Responder {
-			return middleware.NotImplemented("operation tools.LookupDomain has not yet been implemented")
-		}),
+		ToolsLookupDomainHandler: tools.LookupDomainHandlerFunc(handler.LookupDomain),
 		HistoryQueriesHistoryHandler: history.QueriesHistoryHandlerFunc(func(params history.QueriesHistoryParams) middleware.Responder {
 			return middleware.NotImplemented("operation history.QueriesHistory has not yet been implemented")
 		}),
