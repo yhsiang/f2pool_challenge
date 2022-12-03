@@ -51,9 +51,7 @@ func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
 		JSONProducer: runtime.JSONProducer(),
 
 		ToolsLookupDomainHandler: tools.LookupDomainHandlerFunc(handler.LookupDomain),
-		HistoryQueriesHistoryHandler: history.QueriesHistoryHandlerFunc(func(params history.QueriesHistoryParams) middleware.Responder {
-			return middleware.NotImplemented("operation history.QueriesHistory has not yet been implemented")
-		}),
+		HistoryQueriesHistoryHandler: history.QueriesHistoryHandlerFunc(handler.QueriesHistory),
 		RootRootHandler: root.RootHandlerFunc(func(params root.RootParams) middleware.Responder {
 			return middleware.NotImplemented("operation root.Root has not yet been implemented")
 		}),
