@@ -41,8 +41,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: yhsiang/f2pool-challenge:latest
+      - name: Build and Push Docker image
+        run: |
+              docker build . --tag ghcr.io/yhsiang/f2pool-challenge:latest
+              docker push ghcr.io/yhsiang/f2pool-challenge:latest
