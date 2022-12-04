@@ -45,9 +45,9 @@ jobs:
         run: |
               docker build . --tag ghcr.io/yhsiang/f2pool-challenge:latest
               docker push ghcr.io/yhsiang/f2pool-challenge:latest
-    - name: Deploy to Linode kubernetes
-      uses: actions-hub/kubectl@master
-      env:
-        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      with:
-        args: rollout restart f2pool-challenge
+      - name: Deploy to Linode kubernetes
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: rollout restart f2pool-challenge
