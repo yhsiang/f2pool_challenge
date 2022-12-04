@@ -48,6 +48,15 @@ func init() {
         }
       }
     },
+    "/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/metrics": {
       "get": {
         "responses": {
@@ -273,6 +282,15 @@ func init() {
             "schema": {
               "$ref": "#/definitions/handler.RootResponse"
             }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

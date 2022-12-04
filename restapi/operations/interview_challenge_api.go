@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
+	"context"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/loads"
@@ -25,6 +27,8 @@ import (
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/history"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/root"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/tools"
+
+	"github.com/etherlabsio/healthcheck/v2"
 )
 
 // NewInterviewChallengeAPI creates a new InterviewChallenge instance
@@ -279,6 +283,25 @@ func (o *InterviewChallengeAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	// TODO: fix with api.AddMiddlewareFor("POST", "/example", myMiddleware)
+	o.handlers["GET"]["/health"] = healthcheck.Handler(
+
+        // WithTimeout allows you to set a max overall timeout.
+        healthcheck.WithTimeout(5*time.Second),
+
+		healthcheck.WithChecker(
+            "database", healthcheck.CheckerFunc(
+                func(ctx context.Context) error {
+					db := database.NewDB(0)
+                    return db.Ping()
+                },
+            ),
+        ),
+    )
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	// TODO: fix with api.AddMiddlewareFor("POST", "/example", myMiddleware)
 	o.handlers["GET"]["/metrics"] = promhttp.Handler()
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

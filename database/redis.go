@@ -66,3 +66,8 @@ func (db *DB) FetchQueries(params *history.QueriesHistoryParams) ([]*models.Mode
 
 	return queries, nil
 }
+
+func (db *DB) Ping() error {
+	_, err := db.client.Ping().Result()
+	return err
+}
