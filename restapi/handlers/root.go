@@ -7,18 +7,26 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/yhsiang/f2pool-challenge/models"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/root"
+
+	"k8s.io/client-go/rest"
 )
 
 //go:embed version.txt
 var version string
 
 func Root(params root.RootParams) middleware.Responder {
-	kubernetes := new(bool)
-	*kubernetes = false
+	isInK8s := new(bool)
+
+	_, err := rest.InClusterConfig()
+	if err != nil {
+		*isInK8s = false
+	} else {
+		*isInK8s = true
+	}
 
 	return root.NewRootOK().WithPayload(&models.HandlerRootResponse{
 		Date:       time.Now().Unix(),
-		Kubernetes: kubernetes,
+		Kubernetes: isInK8s,
 		Version:    version,
 	})
 }

@@ -10,3 +10,19 @@
 7. add dockerfile
 8. add docker-compose.yml
 9. add some test cases
+
+## TODO
+1. detect kubernetes
+2. Prometheus
+3. health check
+
+## Development
+
+* prerequisite
+   - redis
+
+* execute server
+
+```
+$ godotenv -f .env -- go run cmd/interview-challenge-server/main.go --port 3000
+```

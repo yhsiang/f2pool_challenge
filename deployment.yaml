@@ -1,0 +1,33 @@
+
+# kubectl create secret docker-registry ghcr --docker-server=https://ghcr.io/v2/ --docker-username=yhsiang --docker-password=<GITHUB_PERSONAL_TOKEN> --docker-email=<EMAIL>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f2pool-challenge
+  labels:
+    app.kubernetes.io/name: f2pool-challenge
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: f2pool-challenge
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: f2pool-challenge
+    spec:
+      imagePullSecrets:
+      - name: ghcr
+      containers:
+        - name: f2pool-challenge
+          # This is the import path for the Go binary to build and run.
+          image: ghcr.io/yhsiang/f2pool-challenge:latest
+          # envFrom:
+          #   - secretRef:
+          #       name: f2pool-challenge
+          env:
+            - name: REDIS_URL
+              value: localhost:6379
+        - name: redis
+          image: redis:alpine
+          imagePullPolicy: Always
