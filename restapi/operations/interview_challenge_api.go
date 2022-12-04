@@ -28,7 +28,7 @@ import (
 
 // NewInterviewChallengeAPI creates a new InterviewChallenge instance
 func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
-	db:=database.NewDB()
+	db:=database.NewDB(0)
 	handler:= handlers.NewQueryHandler(db)
 	return &InterviewChallengeAPI{
 		handlers:            make(map[string]map[string]http.Handler),

@@ -9,3 +9,4 @@
 6. add root endpoint
 7. add dockerfile
 8. add docker-compose.yml
+9. add some test cases

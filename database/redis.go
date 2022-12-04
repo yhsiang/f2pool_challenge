@@ -1,16 +1,12 @@
 package database
 
 import (
-	"context"
 	"fmt"
-	"net"
 	"os"
-	"time"
 
 	"github.com/go-redis/redis"
 	"github.com/yhsiang/f2pool-challenge/models"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/history"
-	"github.com/yhsiang/f2pool-challenge/restapi/operations/tools"
 )
 
 const KEY_NAME = "f2pool_queries"
@@ -19,12 +15,12 @@ type DB struct {
 	client *redis.Client
 }
 
-func NewDB() *DB {
-	// TODO: pass configuration from env vars
+func NewDB(db int) *DB {
+	// TODO: secure redis
 	client := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_URL"), //"localhost:6379",
-		Password: "",                     // no password set
-		DB:       0,                      // use default DB
+		Addr:     os.Getenv("REDIS_URL"),
+		Password: "",
+		DB:       db,
 	})
 
 	return &DB{
@@ -32,31 +28,18 @@ func NewDB() *DB {
 	}
 }
 
-func (db *DB) SaveQuery(params *tools.LookupDomainParams) (*models.ModelQuery, error) {
-	ctx := context.Background()
-	addrs, err := net.DefaultResolver.LookupIP(ctx, "ip4", params.Domain) //LookupIP()
-	if err != nil {
-		return nil, err
-	}
-
-	query := &models.ModelQuery{
-		Addresses: models.NewModelAddresses(addrs),
-		// TODO: consider req.Header.Get("X-Forwarded-For")
-		ClientIP:  params.HTTPRequest.RemoteAddr,
-		CreatedAt: time.Now().Unix(),
-	}
-
+func (db *DB) SaveQuery(query *models.ModelQuery) error {
 	jsonStr, err := query.MarshalBinary()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.client.LPush(KEY_NAME, jsonStr).Result()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return query, nil
+	return nil
 }
 
 func (db *DB) FetchQueries(params *history.QueriesHistoryParams) ([]*models.ModelQuery, error) {

@@ -1,6 +1,10 @@
 package handlers
 
 import (
+	"context"
+	"net"
+	"time"
+
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/yhsiang/f2pool-challenge/database"
 	"github.com/yhsiang/f2pool-challenge/models"
@@ -10,7 +14,7 @@ import (
 
 type QueryHandler struct {
 	db interface {
-		SaveQuery(*tools.LookupDomainParams) (*models.ModelQuery, error)
+		SaveQuery(*models.ModelQuery) error
 		FetchQueries(*history.QueriesHistoryParams) ([]*models.ModelQuery, error)
 	}
 }
@@ -20,10 +24,30 @@ func NewQueryHandler(db *database.DB) *QueryHandler {
 }
 
 func (m *QueryHandler) LookupDomain(params tools.LookupDomainParams) middleware.Responder {
-	query, err := m.db.SaveQuery(&params)
+	query, err := Lookup(&params)
+	if err != nil {
+		return tools.NewLookupDomainBadRequest()
+	}
+
+	err = m.db.SaveQuery(query)
 	if err != nil {
 		return tools.NewLookupDomainBadRequest()
 	}
 
 	return tools.NewLookupDomainOK().WithPayload(query)
+}
+
+func Lookup(params *tools.LookupDomainParams) (*models.ModelQuery, error) {
+	ctx := context.Background()
+	addrs, err := net.DefaultResolver.LookupIP(ctx, "ip4", params.Domain) //LookupIP()
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.ModelQuery{
+		Addresses: models.NewModelAddresses(addrs),
+		// TODO: consider req.Header.Get("X-Forwarded-For")
+		ClientIP:  params.HTTPRequest.RemoteAddr,
+		CreatedAt: time.Now().Unix(),
+	}, nil
 }
