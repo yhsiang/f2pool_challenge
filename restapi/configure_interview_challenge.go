@@ -13,6 +13,10 @@ import (
 	"github.com/yhsiang/f2pool-challenge/restapi/operations"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/history"
 	"github.com/yhsiang/f2pool-challenge/restapi/operations/tools"
+
+	metrics "github.com/slok/go-http-metrics/metrics/prometheus"
+	pm "github.com/slok/go-http-metrics/middleware"
+	"github.com/slok/go-http-metrics/middleware/std"
 )
 
 //go:generate swagger generate server --target ../../f2pool --name InterviewChallenge --spec ../swagger.json --principal interface{}
@@ -59,7 +63,15 @@ func configureAPI(api *operations.InterviewChallengeAPI) http.Handler {
 
 	api.ServerShutdown = func() {}
 
-	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
+	mdlw := pm.New(pm.Config{
+		Recorder: metrics.NewRecorder(metrics.Config{}),
+	})
+
+	return setupGlobalMiddleware(
+		std.Handler("", mdlw,
+			api.Serve(setupMiddlewares),
+		),
+	)
 }
 
 // The TLS configuration before HTTPS server starts.

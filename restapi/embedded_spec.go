@@ -48,6 +48,15 @@ func init() {
         }
       }
     },
+    "/metrics": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/v1/history": {
       "get": {
         "description": "List queries",
@@ -264,6 +273,15 @@ func init() {
             "schema": {
               "$ref": "#/definitions/handler.RootResponse"
             }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

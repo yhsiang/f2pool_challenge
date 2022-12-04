@@ -29,6 +29,15 @@
                 }
             }
         },
+        "/metrics": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/v1/history": {
             "get": {
                 "description": "List queries",

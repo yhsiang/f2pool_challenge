@@ -18,6 +18,7 @@ import (
 	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/yhsiang/f2pool-challenge/database"
 	"github.com/yhsiang/f2pool-challenge/restapi/handlers"
@@ -28,8 +29,8 @@ import (
 
 // NewInterviewChallengeAPI creates a new InterviewChallenge instance
 func NewInterviewChallengeAPI(spec *loads.Document) *InterviewChallengeAPI {
-	db:=database.NewDB(0)
-	handler:= handlers.NewQueryHandler(db)
+	db := database.NewDB(0)
+	handler := handlers.NewQueryHandler(db)
 	return &InterviewChallengeAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
@@ -275,6 +276,10 @@ func (o *InterviewChallengeAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/metrics"] = promhttp.Handler()
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
