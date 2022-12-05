@@ -26,12 +26,16 @@ func NewQueryHandler(db *database.DB) *QueryHandler {
 func (m *QueryHandler) LookupDomain(params tools.LookupDomainParams) middleware.Responder {
 	query, err := Lookup(&params)
 	if err != nil {
-		return tools.NewLookupDomainBadRequest()
+		return tools.NewLookupDomainBadRequest().WithPayload(&models.UtilsHTTPError{
+			Message: err.Error(),
+		})
 	}
 
 	err = m.db.SaveQuery(query)
 	if err != nil {
-		return tools.NewLookupDomainBadRequest()
+		return tools.NewLookupDomainBadRequest().WithPayload(&models.UtilsHTTPError{
+			Message: err.Error(),
+		})
 	}
 
 	return tools.NewLookupDomainOK().WithPayload(query)

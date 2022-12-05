@@ -11,12 +11,8 @@ import (
 func ValidateIP(params tools.ValidateIPParams) middleware.Responder {
 	// use pointer to solve boolean omitempty
 	status := new(bool)
-	*status = false
 	ip := net.ParseIP(params.Request.IP)
-
-	if ip != nil {
-		*status = true
-	}
+	*status = ip != nil
 
 	return tools.NewValidateIPOK().WithPayload(&models.HandlerValidateIPResponse{
 		Status: status,

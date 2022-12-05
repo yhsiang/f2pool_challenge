@@ -18,11 +18,7 @@ func Root(params root.RootParams) middleware.Responder {
 	isInK8s := new(bool)
 
 	_, err := rest.InClusterConfig()
-	if err != nil {
-		*isInK8s = false
-	} else {
-		*isInK8s = true
-	}
+	*isInK8s = err == nil
 
 	return root.NewRootOK().WithPayload(&models.HandlerRootResponse{
 		Date:       time.Now().Unix(),
