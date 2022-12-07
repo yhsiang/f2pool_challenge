@@ -71,3 +71,8 @@ func (db *DB) Ping() error {
 	_, err := db.client.Ping().Result()
 	return err
 }
+
+func (db *DB) Flush() error {
+	_, err := db.client.FlushDB().Result()
+	return err
+}

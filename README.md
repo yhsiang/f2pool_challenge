@@ -6,7 +6,6 @@
 3. implement lookup domain (net.LookupIP)
 4. implement validate ip (net.ParseIP)
 5. implement queries history (redis list)
-   - I don't really test for twenty items
 6. add root endpoint
 7. add dockerfile
 8. add docker-compose.yml
@@ -14,6 +13,7 @@
 10. detect application running in kubernetes
 11. support Prometheus
 12. support health check
+13. add test for verifying maximum size of queries history
 
 ## TODO
 1. move `/metrics` and `/health` into configure_interview_challenge

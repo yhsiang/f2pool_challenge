@@ -35,4 +35,5 @@ func TestLookupDomain(t *testing.T) {
 	})
 
 	assert.NotEmpty(t, response.(*tools.LookupDomainOK).Payload.CreatedAt)
+	db.Flush()
 }
