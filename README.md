@@ -46,3 +46,7 @@ use github actions to deploy to linode k8s
 9. setup secret of github action KUBE_CONFIG 
 10. use port-forwarding to test 
    `kubectl port-forward <pod-name> 3000:3000`
+
+**NOTE**
+
+I use a sidecar pattern to deploy redis, and known issue is about persistence. It's better to change it into redis pod with persistent volume or redis instance (recommend). Redis instance can be Amazon ElastiCache for Redis, GCP Memorystore, RedisLab or self-hosted instance.
